@@ -1,0 +1,10 @@
+FROM node:24.22.1-alpine3.23@sha256:0468540aa58203ff9e40c2aab3907c52644ab818af6176b1c70a026137dc92a2 AS patched-node
+FROM hyperskill.azurecr.io/n8n@sha256:dd3edb8b3007a6346ee0736e751a4e0b45644b2493853ee109c7e9738c2fb736
+USER root
+COPY --from=patched-node /usr/local/bin/node /usr/local/bin/node
+COPY backport.cjs test-backport.cjs /opt/security/
+RUN test "$(node --version)" = 'v24.22.1' \
+ && node /opt/security/backport.cjs \
+ && node /opt/security/test-backport.cjs \
+ && n8n --version
+USER node
