@@ -1,0 +1,72 @@
+{
+  "id": "SecSmoke20261030A",
+  "name": "Isolated security smoke",
+  "active": false,
+  "nodes": [
+    {
+      "id": "start",
+      "name": "Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "js",
+      "name": "JavaScript",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        200,
+        0
+      ],
+      "parameters": {
+        "jsCode": "return [{json:{javascript:\"ok\",value:6*7}}];"
+      }
+    },
+    {
+      "id": "py",
+      "name": "Python",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        0
+      ],
+      "parameters": {
+        "language": "pythonNative",
+        "pythonCode": "return [{\"json\": {\"javascript\": _items[0][\"json\"][\"javascript\"], \"python\": \"ok\", \"value\": _items[0][\"json\"][\"value\"]}}]"
+      }
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Python",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

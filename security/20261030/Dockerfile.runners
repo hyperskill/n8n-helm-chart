@@ -1,0 +1,7 @@
+FROM node:24.22.1-alpine3.23@sha256:0468540aa58203ff9e40c2aab3907c52644ab818af6176b1c70a026137dc92a2 AS patched-node
+FROM n8nio/runners@sha256:c0a326aa754acc3bb87b65f075334b46bf1b555fbe9c46167636302eb6ab4b8e
+USER root
+COPY --from=patched-node /usr/local/bin/node /usr/local/bin/node
+RUN test "$(node --version)" = 'v24.22.1' \
+ && node -e 'const z=require("node:zlib"),a=Buffer.from("runner smoke");if(!z.brotliDecompressSync(z.brotliCompressSync(a)).equals(a))process.exit(1)'
+USER runner
